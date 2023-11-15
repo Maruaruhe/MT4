@@ -313,6 +313,12 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 	return resultViewport;
 }
 
+Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
+	Matrix4x4 resultMatrix = {};
+
+
+}
+
 void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label) {
 
 	Novice::ScreenPrintf(x, y, "%s", label);
