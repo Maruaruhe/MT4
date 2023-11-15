@@ -316,7 +316,27 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 	Matrix4x4 resultMatrix = {};
 
+	resultMatrix.m[0][0] = float(pow(axis.x, 2)) * (1 - std::cos(angle)) + std::cos(angle);
+	resultMatrix.m[0][1] = axis.x * axis.y * (1 - std::cos(angle)) + axis.z * std::sin(angle);
+	resultMatrix.m[0][2] = axis.x * axis.z * (1 - std::cos(angle)) - axis.y * std::sin(angle);
+	resultMatrix.m[0][3] = 0.0f;
 
+	resultMatrix.m[1][0] = axis.x * axis.y * (1 - std::cos(angle)) - axis.z * std::sin(angle);
+	resultMatrix.m[1][1] = float(pow(axis.y, 2)) * (1 - std::cos(angle)) + std::cos(angle);
+	resultMatrix.m[1][2] = axis.y * axis.z * (1 - std::cos(angle)) - axis.x * std::sin(angle);
+	resultMatrix.m[1][3] = 0.0f;
+
+	resultMatrix.m[2][0] = axis.x * axis.z * (1 - std::cos(angle)) - axis.y * std::sin(angle);
+	resultMatrix.m[2][1] = axis.y * axis.z * (1 - std::cos(angle)) - axis.x * std::sin(angle);
+	resultMatrix.m[2][2] = float(pow(axis.z, 2)) * (1 - std::cos(angle)) + std::cos(angle);
+	resultMatrix.m[2][3] = 0.0f;
+
+	resultMatrix.m[3][0] = 0.0f;
+	resultMatrix.m[3][1] = 0.0f;
+	resultMatrix.m[3][2] = 0.0f;
+	resultMatrix.m[3][3] = 1.0f;
+
+	return resultMatrix;
 }
 
 void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label) {
