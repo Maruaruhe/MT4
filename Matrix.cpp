@@ -323,10 +323,11 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 
 	resultMatrix.m[1][0] = axis.x * axis.y * (1 - std::cos(angle)) - axis.z * std::sin(angle);
 	resultMatrix.m[1][1] = float(pow(axis.y, 2)) * (1 - std::cos(angle)) + std::cos(angle);
-	resultMatrix.m[1][2] = axis.y * axis.z * (1 - std::cos(angle)) - axis.x * std::sin(angle);
+	//
+	resultMatrix.m[1][2] = axis.y * axis.z * (1 - std::cos(angle)) + axis.x * std::sin(angle);
 	resultMatrix.m[1][3] = 0.0f;
-
-	resultMatrix.m[2][0] = axis.x * axis.z * (1 - std::cos(angle)) - axis.y * std::sin(angle);
+//
+	resultMatrix.m[2][0] = axis.x * axis.z * (1 - std::cos(angle)) + axis.y * std::sin(angle);
 	resultMatrix.m[2][1] = axis.y * axis.z * (1 - std::cos(angle)) - axis.x * std::sin(angle);
 	resultMatrix.m[2][2] = float(pow(axis.z, 2)) * (1 - std::cos(angle)) + std::cos(angle);
 	resultMatrix.m[2][3] = 0.0f;
@@ -344,7 +345,7 @@ void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label) {
 	Novice::ScreenPrintf(x, y, "%s", label);
 	for (int row = 0; row < 4; ++row) {
 		for (int column = 0; column < 4; ++column) {
-			Novice::ScreenPrintf(x + column * kColumnWidth, y + (row + 1) * kRowHeight, "%6.02f", m.m[row][column]);
+			Novice::ScreenPrintf(x + column * kColumnWidth, y + (row + 1) * kRowHeight, "%6.03f", m.m[row][column]);
 		}
 	}
 }
