@@ -31,6 +31,7 @@ Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float botto
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h);

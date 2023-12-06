@@ -47,3 +47,16 @@ Vector3 Project(const Vector3& v1, const Vector3& v2);
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 
 void VectorScreenPrint(int x, int y, const Vector3& vector, const char* label);
+
+Vector3 operator+(const Vector3& num1, const Vector3& num2);
+Vector3 operator-(const Vector3& num1, const Vector3& num2);
+Vector3 operator*(const Vector3& num1, const float num2);
+Vector3 operator*(const float num1, const Vector3& num2);
+Vector3 operator*(const Vector3& num1, const Vector3& num2);
+Vector3 operator/(const Vector3& num1, const float num2);
+Vector3 operator+=(Vector3& num1, const Vector3& num2);
+Vector3 operator-=(Vector3& num1, const Vector3& num2);
+Vector3 operator*=(Vector3& num1, const float num2);
+Vector3 operator*=(Vector3& num1, const Vector3& num2);
+Vector3 operator/=(Vector3& num1, const Vector3& num2);
+Vector3 operator/=(Vector3& num1, const float num2);
