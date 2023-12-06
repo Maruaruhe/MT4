@@ -367,32 +367,22 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float cos, float sin) {
 }
 
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
-	Vector3 n = Normalize(from * to);
+	Vector3 n;
+	if (from.x == -to.x && from.y == -to.y && from.z == -to.z) {
+		if (from.x != 0 || from.y != 0) {
+			n = Normalize({ from.y,-from.x,0 });
+		}
+		else if (from.x != 0 || from.z != 0) {
+			n = Normalize({ from.z,0,-from.x });
+		}
+	}
+	else {
+		n = Normalize(Cross(from, to));
+	}
 	float cos = Dot(from, to);
 	float sin = Length(Cross(from , to));
 
-	Matrix4x4 result;
-	result.m[0][0] = n.x * n.x * (1 - cos) + cos;
-	result.m[0][1] = n.x * n.y * (1 - cos) + n.z * sin;
-	result.m[0][2] = n.x * n.z * (1 - cos) - n.y * sin;
-	result.m[0][3] = 0.0f;
-
-	result.m[1][0] = n.x * n.y * (1 - cos) - n.z * sin;
-	result.m[1][1] = n.y * n.y * (1 - cos) + cos;
-	result.m[1][2] = n.y * n.z * (1 - cos) + n.x * sin;
-	result.m[1][3] = 0.0f;
-
-	result.m[2][0] = n.x * n.z * (1 - cos) + n.y * sin;
-	result.m[2][1] = n.y * n.z * (1 - cos) - n.x * sin;
-	result.m[2][2] = n.z * n.z * (1 - cos) + cos;
-	result.m[2][3] = 0.0f;
-
-	result.m[3][0] = 0.0f;
-	result.m[3][1] = 0.0f;
-	result.m[3][2] = 0.0f;
-	result.m[3][3] = 1.0f;
-
-	return result;
+	return MakeRotateAxisAngle(n, cos, sin);
 }
 
 void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label) {
