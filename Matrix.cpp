@@ -164,7 +164,7 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	};
 }
 
-Matrix4x4 MakeScaleMatrix(const Vector3& scale){
+Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	return{
 		scale.x, 0, 0,0,
 		0, scale.y, 0,0,
@@ -207,7 +207,7 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
-	
+
 	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);
 	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rotate.y);
 	Matrix4x4 rotateZMatrix = MakeRotateZMatrix(rotate.z);
@@ -240,19 +240,19 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
 	Matrix4x4 resultPerspectiveFov = {};
 
-	resultPerspectiveFov.m[0][0] = (1 / aspectRatio) * (1/std::tan(fovY/2));
+	resultPerspectiveFov.m[0][0] = (1 / aspectRatio) * (1 / std::tan(fovY / 2));
 	resultPerspectiveFov.m[0][1] = 0;
 	resultPerspectiveFov.m[0][2] = 0;
 	resultPerspectiveFov.m[0][3] = 0;
 
 	resultPerspectiveFov.m[1][0] = 0;
-	resultPerspectiveFov.m[1][1] = (1/std::tan(fovY/2));
+	resultPerspectiveFov.m[1][1] = (1 / std::tan(fovY / 2));
 	resultPerspectiveFov.m[1][2] = 0;
 	resultPerspectiveFov.m[1][3] = 0;
 
 	resultPerspectiveFov.m[2][0] = 0;
 	resultPerspectiveFov.m[2][1] = 0;
-	resultPerspectiveFov.m[2][2] = farClip/(farClip-nearClip);
+	resultPerspectiveFov.m[2][2] = farClip / (farClip - nearClip);
 	resultPerspectiveFov.m[2][3] = 1;
 
 	resultPerspectiveFov.m[3][0] = 0;
@@ -326,7 +326,7 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 	//
 	resultMatrix.m[1][2] = axis.y * axis.z * (1 - std::cos(angle)) + axis.x * std::sin(angle);
 	resultMatrix.m[1][3] = 0.0f;
-//
+	//
 	resultMatrix.m[2][0] = axis.x * axis.z * (1 - std::cos(angle)) + axis.y * std::sin(angle);
 	resultMatrix.m[2][1] = axis.y * axis.z * (1 - std::cos(angle)) - axis.x * std::sin(angle);
 	resultMatrix.m[2][2] = float(pow(axis.z, 2)) * (1 - std::cos(angle)) + std::cos(angle);
@@ -338,6 +338,35 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle) {
 	resultMatrix.m[3][3] = 1.0f;
 
 	return resultMatrix;
+}
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
+	Vector3 n = Normalize(from * to);
+	float cos = Dot(from, to);
+	float sin = Length(from * to);
+
+	Matrix4x4 result;
+	result.m[0][0] = n.x * n.x * (1 - cos) + cos;
+	result.m[0][1] = n.x * n.y * (1 - cos) + n.z * sin;
+	result.m[0][2] = n.x * n.z * (1 - cos) - n.y * sin;
+	result.m[0][3] = 0.0f;
+
+	result.m[0][0] = n.x * n.y * (1 - cos) - n.z * sin;
+	result.m[0][1] = n.y * n.y * (1 - cos) + cos;
+	result.m[0][2] = n.y * n.z * (1 - cos) + n.x * sin;
+	result.m[0][3] = 0.0f;
+
+	result.m[0][0] = n.x * n.z * (1 - cos) + n.y * sin;
+	result.m[0][1] = n.y * n.z * (1 - cos) - n.x * sin;
+	result.m[0][2] = n.z * n.z * (1 - cos) + cos;
+	result.m[0][3] = 0.0f;
+
+	result.m[0][0] = 0.0f;
+	result.m[0][1] = 0.0f;
+	result.m[0][2] = 0.0f;
+	result.m[0][3] = 1.0f;
+
+	return result;
 }
 
 void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label) {
