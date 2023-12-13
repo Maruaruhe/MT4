@@ -44,6 +44,9 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>KamataEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Quartenion.cpp">
+      <Filter>KamataEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\KamataEngine\DirectXGame\audio\Audio.h">
@@ -120,5 +123,6 @@
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Quartenion.h" />
   </ItemGroup>
 </Project>
