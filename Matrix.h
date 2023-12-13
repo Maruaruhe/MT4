@@ -3,6 +3,7 @@
 #include "Vec3.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include "Quartenion.h"
 
 struct Vector3;
 
@@ -34,6 +35,8 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
 Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float cos, float sin);
 
 Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
+
+Matrix4x4 MakeRotateMatrix(const Quartenion& quartenion);
 
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h);
 float InverseNum2(const Matrix4x4& m, int a, int b, int c, int d, int e, int f);

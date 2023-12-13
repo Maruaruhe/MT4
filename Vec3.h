@@ -3,6 +3,7 @@
 #include "assert.h"
 #include "main.h"
 #include <Novice.h>
+#include "Quartenion.h"
 
 struct Matrix4x4;
 
@@ -45,6 +46,8 @@ Vector3 Cross(const Vector3& vector1, const Vector3& vector2);
 
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
+
+Vector3 RotateVector(const Vector3& vector, const Quartenion& quartenion);
 
 void VectorScreenPrint(int x, int y, const Vector3& vector, const char* label);
 

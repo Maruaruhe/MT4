@@ -47,6 +47,10 @@ Quartenion Inverse(const Quartenion& quartenion) {
 	return result;
 }
 
+Quartenion MakeRotateAxisAngleQuartenion(const Vector3& axis, float angle) {
+
+}
+
 void QuartenionScreenPrint(int x, int y, const Quartenion& q, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", q.x);
 	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", q.y);
