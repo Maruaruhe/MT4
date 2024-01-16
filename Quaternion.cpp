@@ -57,10 +57,62 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 	return result;
 }
 
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
+	Quaternion result;
+
+	float dot = Dot({ q0.x,q0.y,q0.z }, { q1.x,q1.y,q1.z });
+	if (dot < 0) {
+		q0 = -1 * q0;
+		dot = -dot;
+	}
+
+	return result;
+}
+
 void QuaternionScreenPrint(int x, int y, const Quaternion& q, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", q.x);
 	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", q.y);
 	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", q.z);
 	Novice::ScreenPrintf(x + kColumnWidth * 3, y, "%.02f", q.w);
 	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", label);
+}
+
+Quaternion operator+(const Quaternion& num1, const Quaternion& num2) {
+	Quaternion num;
+
+	num.w = num1.w + num2.w;
+	num.x = num1.x + num2.x;
+	num.y = num1.y + num2.y;
+	num.z = num1.z + num2.z;
+
+	return num;
+}
+
+Quaternion operator-(const Quaternion& num1, const Quaternion& num2) {
+	Quaternion num;
+
+	num.w = num1.w - num2.w;
+	num.x = num1.x - num2.x;
+	num.y = num1.y - num2.y;
+	num.z = num1.z - num2.z;
+
+	return num;
+}
+
+Quaternion operator*(const Quaternion& num1, const float num2) {
+	Quaternion num;
+
+	num.w = num1.w * num2;
+	num.x = num1.x * num2;
+	num.y = num1.y * num2;
+	num.z = num1.z * num2;
+
+	return num;
+}
+
+Quaternion operator*=(const Quaternion& num1, const float num2) {
+	num1.w = num2;
+	num1.x *= num1.x * num2;
+	num1.y *= num1.y * num2;
+	num1.z *= num1.z * num2;0.0
 }
