@@ -86,6 +86,17 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment) {
 	return cp;
 }
 
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+	Quaternion quaternionVec = { vector.x,vector.y,vector.z,0.0f };
+	Quaternion conjugate = Conjugate(quaternion);
+	Quaternion rotation = Multiply(quaternion, Multiply(quaternionVec, conjugate));
+
+
+	Vector3 result = { rotation.x,rotation.y,rotation.z };;
+
+	return result;
+}
+
 void VectorScreenPrint(int x, int y, const Vector3& vector, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
 	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);

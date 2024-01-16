@@ -1,7 +1,7 @@
-#include "Quartenion.h"
+#include "Quaternion.h"
 
-Quartenion Multiply(const Quartenion& lhs, const Quartenion& rhs) {
-	Quartenion result;
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
+	Quaternion result;
 	result.x = lhs.w * rhs.x - lhs.z * rhs.y + lhs.y * rhs.z + lhs.x * rhs.w;
 	result.y= lhs.z * rhs.x + lhs.w * rhs.y - lhs.x * rhs.z + lhs.y * rhs.w;
 	result.z= -lhs.y * rhs.x + lhs.x * rhs.y + lhs.w * rhs.z + lhs.z * rhs.w;
@@ -10,21 +10,21 @@ Quartenion Multiply(const Quartenion& lhs, const Quartenion& rhs) {
 	return result;
 }
 
-Quartenion IdentityQurtenion() {
+Quaternion IdentityQurtenion() {
 	return { 0.0f,0.0f,0.0f,1.0f };
 }
 
-Quartenion Conjugate(const Quartenion& quartenion) {
+Quaternion Conjugate(const Quaternion& quartenion) {
 	return { -quartenion.x,-quartenion.y,-quartenion.z,quartenion.w };
 }
 
-float Norm(const Quartenion& quartenion) {
+float Norm(const Quaternion& quartenion) {
 	float result = pow(quartenion.w, 2) + pow(quartenion.x, 2) + pow(quartenion.y, 2) + pow(quartenion.z, 2);
 	result = sqrt(result);
 	return result;
 }
-Quartenion Normalize(const Quartenion& quartenion) {
-	Quartenion result;
+Quaternion Normalize(const Quaternion& quartenion) {
+	Quaternion result;
 	float norm = Norm(quartenion);
 	result.x = quartenion.x / norm;
 	result.y = quartenion.y / norm;
@@ -33,10 +33,10 @@ Quartenion Normalize(const Quartenion& quartenion) {
 
 	return result;
 }
-Quartenion Inverse(const Quartenion& quartenion) {
-	Quartenion result;
+Quaternion Inverse(const Quaternion& quartenion) {
+	Quaternion result;
 
-	Quartenion conjugate = Conjugate(quartenion);
+	Quaternion conjugate = Conjugate(quartenion);
 	float norm = Norm(quartenion);
 
 	result.x = conjugate.x / pow(norm, 2);
@@ -47,11 +47,17 @@ Quartenion Inverse(const Quartenion& quartenion) {
 	return result;
 }
 
-Quartenion MakeRotateAxisAngleQuartenion(const Vector3& axis, float angle) {
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
+	Quaternion result;
+	result.x = axis.x * sinf(angle / 2.0f);
+	result.y = axis.y * sinf(angle / 2.0f);
+	result.z = axis.z * sinf(angle / 2.0f);
+	result.w = cosf(angle / 2.0f);
 
+	return result;
 }
 
-void QuartenionScreenPrint(int x, int y, const Quartenion& q, const char* label) {
+void QuaternionScreenPrint(int x, int y, const Quaternion& q, const char* label) {
 	Novice::ScreenPrintf(x, y, "%.02f", q.x);
 	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", q.y);
 	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", q.z);

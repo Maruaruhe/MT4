@@ -366,24 +366,49 @@ Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float cos, float sin) {
 	return resultMatrix;
 }
 
-Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
-	Vector3 n;
-	if (from.x == -to.x && from.y == -to.y && from.z == -to.z) {
-		if (from.x != 0 || from.y != 0) {
-			n = Normalize({ from.y,-from.x,0 });
-		}
-		else if (from.x != 0 || from.z != 0) {
-			n = Normalize({ from.z,0,-from.x });
-		}
-	}
-	else {
-		n = Normalize(Cross(from, to));
-	}
-	float cos = Dot(from, to);
-	float sin = Length(Cross(from , to));
+Matrix4x4 MakeRotateMatrix(const Quaternion& q) {
+	Matrix4x4 result;
+	result.m[0][0] = (q.w * q.w) + (q.x * q.x) - (q.y * q.y) - (q.z * q.z);
+	result.m[0][1] = 2 * ((q.x * q.y) + (q.w * q.z));
+	result.m[0][2] = 2 * ((q.x * q.z) - (q.w * q.y));
+	result.m[0][3] = 0;
 
-	return MakeRotateAxisAngle(n, cos, sin);
+	result.m[1][0] = 2 * ((q.x * q.y) - (q.w * q.z));
+	result.m[1][1] = (q.w * q.w) - (q.x * q.x) + (q.y * q.y) - (q.z * q.z);
+	result.m[1][2] = 2 * ((q.y * q.z) + (q.w * q.x));
+	result.m[1][3] = 0;
+
+	result.m[2][0] = 2 * ((q.x * q.z) + (q.w * q.y));
+	result.m[2][1] = 2 * ((q.y * q.z) - (q.w * q.x));
+	result.m[2][2] = (q.w * q.w) - (q.x * q.x) - (q.y * q.y) + (q.z * q.z);
+	result.m[2][3] = 0;
+
+	result.m[3][0] = 0;
+	result.m[3][1] = 0;
+	result.m[3][2] = 0;
+	result.m[3][3] = 1;
+
+	return result;
 }
+
+//Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
+//	Vector3 n;
+//	if (from.x == -to.x && from.y == -to.y && from.z == -to.z) {
+//		if (from.x != 0 || from.y != 0) {
+//			n = Normalize({ from.y,-from.x,0 });
+//		}
+//		else if (from.x != 0 || from.z != 0) {
+//			n = Normalize({ from.z,0,-from.x });
+//		}
+//	}
+//	else {
+//		n = Normalize(Cross(from, to));
+//	}
+//	float cos = Dot(from, to);
+//	float sin = Length(Cross(from , to));
+//
+//	return MakeRotateAxisAngle(n, cos, sin);
+//}
 
 void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label) {
 

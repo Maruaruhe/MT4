@@ -1,7 +1,7 @@
 #include <Novice.h>
 #include "Matrix.h"
 #include "Vec3.h"
-#include "Quartenion.h"
+#include "Quaternion.h"
 
 const char kWindowTitle[] = "学籍番号";
 
@@ -16,16 +16,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = { 0 };
 
 
-	Quartenion q1 = { 2.0f,3.0f,4.0f,1.0f };
-	Quartenion q2 = { 1.0f,3.0f,5.0f,2.0f };
-
-	Quartenion identity = IdentityQurtenion();
-	Quartenion conj = Conjugate(q1);
-	Quartenion inv = Inverse(q1);
-	Quartenion normal = Normalize(q1);
-	Quartenion mul1 = Multiply(q1, q2);
-	Quartenion mul2 = Multiply(q2, q1);
-	float norm = Norm(q1);
+	Quaternion rotation = MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 1.0f,0.4f,-0.2f }), 0.45f);
+	Vector3 pointY = { 2.1f,-0.9f,1.3f };
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotation);
+	Vector3 rotateByQuanternion = RotateVector(pointY, rotation);
+	Vector3 rotateByMatrix = Transform(pointY, rotateMatrix);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -48,13 +43,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 		
-		QuartenionScreenPrint(0, 0, identity, "Identity");
-		QuartenionScreenPrint(0,20, conj, "Conjugate");
-		QuartenionScreenPrint(0,40, inv, "Inverse");
-		QuartenionScreenPrint(0, 60, normal , "Normalize");
-		QuartenionScreenPrint(0,80, mul1, "Multiply(q1,q2)");
-		QuartenionScreenPrint(0, 100, mul2, "Multiply(q2,q1)");
-		Novice::ScreenPrintf(0, 120, "%0.2f", norm);
+		QuaternionScreenPrint(0, kRowHeight * 0, rotation, "	: rotation");
+		MatrixScreenPrint(0, kRowHeight * 1, rotateMatrix, "rotateMatrix");
+		VectorScreenPrint(0, kRowHeight * 6, rotateByQuanternion, "	: rotateByQuaternion");
+		VectorScreenPrint(0, kRowHeight * 7, rotateByMatrix, "	: rotateByMatrix");
+
 
 		///
 		/// ↑描画処理ここまで
