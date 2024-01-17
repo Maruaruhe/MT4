@@ -57,7 +57,7 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 	return result;
 }
 
-Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
+Quaternion Slerp(Quaternion& q0, const Quaternion& q1, float t) {
 	Quaternion result;
 
 	float dot = Dot({ q0.x,q0.y,q0.z }, { q1.x,q1.y,q1.z });
@@ -65,6 +65,12 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 		q0 = -1 * q0;
 		dot = -dot;
 	}
+	float theta = std::acos(dot);
+
+	float scale0 = std::sinf((1 - t) * theta) / std::sinf(theta);
+	float scale1 = std::sinf(t * theta) / std::sinf(theta);
+
+	result = scale0 * q0 + scale1 * q1;
 
 	return result;
 }
@@ -110,9 +116,22 @@ Quaternion operator*(const Quaternion& num1, const float num2) {
 	return num;
 }
 
-Quaternion operator*=(const Quaternion& num1, const float num2) {
-	num1.w = num2;
-	num1.x *= num1.x * num2;
-	num1.y *= num1.y * num2;
-	num1.z *= num1.z * num2;0.0
+Quaternion operator*(const float num1, const Quaternion& num2) {
+	Quaternion num;
+
+	num.w = num2.w * num1;
+	num.x = num2.x * num1;
+	num.y = num2.y * num1;
+	num.z = num2.z * num1;
+
+	return num;
+}
+
+Quaternion operator*=(Quaternion& num1, const float num2) {
+	num1.w *= num2;
+	num1.x *= num2;
+	num1.y *= num2;
+	num1.z *= num2;
+
+	return num1;
 }
