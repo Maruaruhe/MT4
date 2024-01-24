@@ -13,6 +13,7 @@ void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Mat
 bool IsCollision(const AABB& a, const AABB& b);
 void DrawLine(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
 bool IsCollision(const AABB& box, const Segment& line);
+bool colLineSegment(const AABB& box, const Segment& line);
 
 float Min(float a, float b);
 float Max(float a, float b);

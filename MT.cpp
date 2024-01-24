@@ -119,3 +119,63 @@ float Max(float a, float b) {
 		return b;
 	}
 }
+
+bool colLineSegment(const AABB& box, const Segment& line) {
+    Vector3 dir = Add(line.origin, line.diff) - line.origin;
+
+    if (std::abs(dir.x) < 0.001f) {
+        if (line.origin.x < box.min.x || line.origin.x > box.max.x) {
+            return false;
+        }
+    }
+    else {
+        float invDir = 1.0f / dir.x;
+        float t1 = (box.min.x - line.origin.x) * invDir;
+        float t2 = (box.max.x - line.origin.x) * invDir;
+
+        float tMin = Min(t1, t2);
+        float tMax = Max(t1, t2);
+
+        if (tMin > 1.0f || tMax < 0.0f) {
+            return false;
+        }
+    }
+
+    if (std::abs(dir.y) < 0.001f) {
+        if (line.origin.y < box.min.y || line.origin.y > box.max.y) {
+            return false;
+        }
+    }
+    else {
+        float invDir = 1.0f / dir.y;
+        float t1 = (box.min.y - line.origin.y) * invDir;
+        float t2 = (box.max.y - line.origin.y) * invDir;
+
+        float tMin = Min(t1, t2);
+        float tMax = Max(t1, t2);
+
+        if (tMin > 1.0f || tMax < 0.0f) {
+            return false;
+        }
+    }
+
+    if (std::abs(dir.z) < 0.001f) {
+        if (line.origin.z < box.min.z || line.origin.z > box.max.z) {
+            return false;
+        }
+    }
+    else {
+        float invDir = 1.0f / dir.z;
+        float t1 = (box.min.z - line.origin.z) * invDir;
+        float t2 = (box.max.z - line.origin.z) * invDir;
+
+        float tMin = Min(t1, t2);
+        float tMax = Max(t1, t2);
+
+        if (tMin > 1.0f || tMax < 0.0f) {
+            return false;
+        }
+    }
+
+    return true;
+}

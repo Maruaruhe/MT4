@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::End();
 
-		if(IsCollision(aabb, segment)) {
+		if(colLineSegment(aabb, segment)) {
 			aabbColor = RED;
 		}
 		else {
