@@ -2,6 +2,8 @@
 #include "Matrix.h"
 #include "Vec3.h"
 #include "Quaternion.h"
+#include "MT.h"
+#include <imgui.h>
 
 const char kWindowTitle[] = "学籍番号";
 
@@ -15,15 +17,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
+	int kWindowWidth = 1280;
+	int kWindowHeight = 720;
 
-	Quaternion rotation0 = MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 0.71f,0.71f,0.0f }), 0.3f);
-	Quaternion rotation1 = MakeRotateAxisAngleQuaternion(Normalize(Vector3{ 0.71f,0.0f,0.71f }), 3.141592f);
+	Vector3 cameraTranslate{ 0.0f,1.9f,-6.49f };
+	Vector3 cameraRotate{ 0.26f,0.0f,0.0f };
+	Vector3 cameraPosition{ 0.0f,0.0f,-5.0f };
 
-	Quaternion interpolate0 = Slerp(rotation0, rotation1, 0.0f);
-	Quaternion interpolate1 = Slerp(rotation0, rotation1, 0.3f);
-	Quaternion interpolate2 = Slerp(rotation0, rotation1, 0.5f);
-	Quaternion interpolate3 = Slerp(rotation0, rotation1, 0.7f);
-	Quaternion interpolate4 = Slerp(rotation0, rotation1, 1.0f);
+	AABB aabb;
+	aabb.min = { -0.5f, -0.5f, -0.5f };
+	aabb.max = { 0.5f,0.5f,0.5f };
+
+	Segment segment;
+	segment.origin = { -0.7f,0.3f,0.0f };
+	segment.diff = { 2.0f,-0.5f,0.0f };
+
+	uint32_t aabbColor = WHITE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -37,7 +46,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓更新処理ここから
 		///
+		Matrix4x4 cameraMatrix = MakeAffineMatrix({ 1.0f, 1.0f, 1.0f }, cameraRotate, cameraTranslate);
+		Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+		Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.0f);
+		Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
+		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
+		ImGui::Begin("Window");
+		ImGui::DragFloat3("aabbMin", &aabb.min.x, 0.01f);
+		ImGui::DragFloat3("aabbMax", &aabb.max.x, 0.01f);
+		ImGui::DragFloat3("segmentOrigin", &segment.origin.x, 0.01f);
+		ImGui::DragFloat3("segmentDiff", &segment.diff.x, 0.01f);
+
+		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
+		ImGui::End();
+
+		if(IsCollision(aabb, segment)) {
+			aabbColor = RED;
+		}
+		else {
+			aabbColor = WHITE;
+		}
 		///
 		/// ↑更新処理ここまで
 		///
@@ -46,12 +76,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 		
-		QuaternionScreenPrint(0, kRowHeight * 0, interpolate0, "	: interpolate0, Slerp(q0, q1, 0.0f)");
-		QuaternionScreenPrint(0, kRowHeight * 1, interpolate1, "	: interpolate1, Slerp(q0, q1, 0.3f)");
-		QuaternionScreenPrint(0, kRowHeight * 2, interpolate2, "	: interpolate2, Slerp(q0, q1, 0.5f)");
-		QuaternionScreenPrint(0, kRowHeight * 3, interpolate3, "	: interpolate3, Slerp(q0, q1, 0.7f)");
-		QuaternionScreenPrint(0, kRowHeight * 4, interpolate4, "	: interpolate4, Slerp(q0, q1, 1.0f)");
-
+		DrawAABB(aabb, viewProjectionMatrix, viewportMatrix, aabbColor);
+		DrawLine(segment, viewProjectionMatrix, viewportMatrix, WHITE);
 
 		///
 		/// ↑描画処理ここまで
