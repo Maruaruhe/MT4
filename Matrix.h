@@ -42,4 +42,6 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quartenion);
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h);
 float InverseNum2(const Matrix4x4& m, int a, int b, int c, int d, int e, int f);
 
+float Det(Matrix4x4 matrix);
+
 void MatrixScreenPrint(int x, int y, Matrix4x4& m, const char* label);

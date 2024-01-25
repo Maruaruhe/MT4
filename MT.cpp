@@ -68,40 +68,65 @@ void DrawLine(const Segment& segment, const Matrix4x4& viewProjectionMatrix, con
     Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), color);
 }
 
-bool IsCollision(const AABB& aabb, const Segment& line) {
+bool IsCollision(const AABB& aabb, const Segment& segment) {
 
     //x
-    float txMin = (aabb.min.x - line.origin.x) / line.diff.x;
-    float txMax = (aabb.max.x - line.origin.x) / line.diff.x;
-
-    float tNearX = Min(txMin, txMax);
-    float tFarX = Max(txMin, txMax);
+    float txMin = (aabb.min.x - segment.origin.x) / segment.diff.x;
+    float txMax = (aabb.max.x - segment.origin.x) / segment.diff.x;
+    float tNearX = min(txMin, txMax);
+    float tFarX = max(txMin, txMax);
 
     //y
-    float tyMin = (aabb.min.y - line.origin.y) / line.diff.y;
-    float tyMax = (aabb.max.y - line.origin.y) / line.diff.y;
-
-    float tNearY = Min(tyMin, tyMax);
-    float tFarY = Max(tyMin, tyMax);
+    float tyMin = (aabb.min.y - segment.origin.y) / segment.diff.y;
+    float tyMax = (aabb.max.y - segment.origin.y) / segment.diff.y;
+    float tNearY = min(tyMin, tyMax);
+    float tFarY = max(tyMin, tyMax);
 
 
     //z
-    float tzMin = (aabb.min.z - line.origin.z) / line.diff.z;
-    float tzMax = (aabb.max.z - line.origin.z) / line.diff.z;
+    float tzMin = (aabb.min.z - segment.origin.z) / segment.diff.z;
+    float tzMax = (aabb.max.z - segment.origin.z) / segment.diff.z;
+    float tNearZ = min(tzMin, tzMax);
+    float tFarZ = max(tzMin, tzMax);
 
-    float tNearZ = Min(tzMin, tzMax);
-    float tFarZ = Max(tzMin, tzMax);
-
-    float tMin = Max(Max(tNearX, tNearY), tNearZ);
-    float tMax = Min(Min(tFarX, tFarY), tFarZ);
+    float tMin = max(max(tNearX, tNearY), tNearZ);
+    float tMax = min(min(tFarX, tFarY), tFarZ);
 
     if (tMin <= tMax) {
-        return true;
+        if (tMin <= 1.0f && 0.0f <= tMax) {
+            return true;
+        }
     }
-    else {
-        return false;
-    }
+    return false;
 }
+
+//bool IsCollision(const AABB& aabb, const Segment& segment) {
+//    float tMinX = (aabb.min.x - segment.origin.x) / segment.diff.x;
+//    float tMaxX = (aabb.max.x - segment.origin.x) / segment.diff.x;
+//    float tNearX = min(tMinX, tMaxX);
+//    float tFarX = max(tMinX, tMaxX);
+//
+//    float tMinY = (aabb.min.y - segment.origin.y) / segment.diff.y;
+//    float tMaxY = (aabb.max.y - segment.origin.y) / segment.diff.y;
+//    float tNearY = min(tMinY, tMaxY);
+//    float tFarY = max(tMinY, tMaxY);
+//
+//    float tMinZ = (aabb.min.z - segment.origin.z) / segment.diff.z;
+//    float tMaxZ = (aabb.max.z - segment.origin.z) / segment.diff.z;
+//    float tNearZ = min(tMinZ, tMaxZ);
+//    float tFarZ = max(tMinZ, tMaxZ);
+//
+//    float tmin = max(max(tNearX, tNearY), tNearZ);
+//    float tmax = min(min(tFarX, tFarY), tFarZ);
+//
+//    if (tmin <= tmax) {
+//
+//        if (tmin <= 1.0f && 0.0f <= tmax) {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 float Min(float a, float b) {
 	if (a <= b) {
